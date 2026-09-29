@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Aprovar vídeos · NakamasBR</title>
+<style>
+  :root { --fundo: #f5f7fb; --texto: #141a26; --suave: #5d6678; --card: #fff; --borda: #dfe4ee; --destaque: #e63946; --ok: #1f9d55; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fundo: #0f1420; --texto: #eef1f7; --suave: #a3acbd; --card: #182032; --borda: #2a3450; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fundo); color: var(--texto); font-family: system-ui, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; } h1 span { color: var(--destaque); }
+  .sub { color: var(--suave); margin: 0 0 20px; font-size: .9rem; }
+  .conta { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--borda); border-radius: 14px; background: var(--card); margin-bottom: 20px; }
+  .conta img { width: 48px; height: 48px; border-radius: 50%; }
+  .conta small { color: var(--suave); display: block; }
+  .post { display: grid; grid-template-columns: 200px 1fr; gap: 16px; padding: 16px; border: 1px solid var(--borda); border-radius: 16px; background: var(--card); margin-bottom: 20px; }
+  @media (max-width: 620px) { .post { grid-template-columns: 1fr; } }
+  video { width: 100%; max-height: 360px; border-radius: 12px; background: #000; }
+  h2 { font-size: 1rem; margin: 0 0 8px; }
+  label.titulo { display: block; font-weight: 600; font-size: .85rem; margin: 12px 0 4px; }
+  textarea, select { width: 100%; font: inherit; font-size: .9rem; padding: 8px; border-radius: 10px; border: 1px solid var(--borda); background: var(--fundo); color: var(--texto); }
+  textarea { min-height: 120px; resize: vertical; }
+  .contador { color: var(--suave); font-size: .75rem; text-align: right; }
+  .linha { display: flex; gap: 16px; flex-wrap: wrap; font-size: .9rem; }
+  .linha label { display: flex; gap: 6px; align-items: center; }
+  .linha label.desativado { opacity: .45; }
+  .caixa { border: 1px dashed var(--borda); border-radius: 12px; padding: 10px 12px; margin-top: 12px; font-size: .9rem; }
+  .opcoes { margin: 8px 0 0 24px; display: grid; gap: 6px; }
+  [hidden] { display: none !important; }
+  .opcoes small, .aviso { color: var(--suave); font-size: .8rem; }
+  .rotulo { margin-top: 8px; font-size: .85rem; color: var(--destaque); }
+  .consentimento { font-size: .8rem; color: var(--suave); margin: 12px 0 8px; }
+  .consentimento a, a { color: var(--destaque); }
+  .botoes { display: flex; gap: 10px; flex-wrap: wrap; }
+  button { font: inherit; font-weight: 600; border: 0; border-radius: 999px; padding: 10px 18px; cursor: pointer; }
+  button.principal { background: var(--destaque); color: #fff; }
+  button.secundario { background: transparent; color: var(--texto); border: 1px solid var(--borda); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  .resultado { margin-top: 10px; font-size: .9rem; }
+  .resultado.ok { color: var(--ok); } .resultado.erro { color: var(--destaque); }
+  .fora { padding: 16px; border-radius: 14px; background: var(--card); border: 1px solid var(--borda); }
+  code { background: var(--fundo); padding: 2px 6px; border-radius: 6px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Aprovar vídeos do <span>TikTok</span></h1>
+  <p class="sub">Revise cada vídeo antes de ele ser publicado na sua conta. Nada é publicado sem a sua aprovação.</p>
+  <p><a id="conectar" class="sub" href="#" hidden>🔗 Conectar ou trocar a conta do TikTok</a></p>
+  <div id="conteudo"><p class="sub">Carregando…</p></div>
+</main>
+
+<template id="modelo">
+  <article class="post">
+    <div><video controls playsinline preload="metadata"></video><p class="aviso duracao"></p></div>
+    <div>
+      <h2 class="nome"></h2>
+      <label class="titulo">Legenda</label>
+      <textarea class="legenda" maxlength="2200"></textarea>
+      <div class="contador"></div>
+
+      <label class="titulo">Quem pode ver este vídeo</label>
+      <select class="privacidade"><option value="" selected disabled>Selecione a privacidade</option></select>
+
+      <label class="titulo">Permitir que os usuários</label>
+      <div class="linha">
+        <label><input type="checkbox" class="comentarios"> Comentem</label>
+        <label><input type="checkbox" class="dueto"> Façam dueto</label>
+        <label><input type="checkbox" class="stitch"> Façam stitch</label>
+      </div>
+
+      <div class="caixa">
+        <label><input type="checkbox" class="divulgar"> <strong>Divulgar conteúdo comercial</strong></label>
+        <div class="aviso">Indique se este vídeo promove você, uma marca, um produto ou um serviço.</div>
+        <div class="opcoes" hidden>
+          <label><input type="checkbox" class="marca"> Sua marca <small>— você promove você mesmo ou o seu negócio</small></label>
+          <label><input type="checkbox" class="parceria"> Conteúdo de marca <small>— você promove outra marca ou terceiro</small></label>
+          <div class="rotulo"></div>
+        </div>
+      </div>
+
+      <p class="consentimento"></p>
+      <div class="botoes">
+        <button type="button" class="principal agendar">Aprovar para o próximo horário</button>
+        <button type="button" class="secundario agora">Publicar agora</button>
+      </div>
+      <div class="resultado"></div>
+    </div>
+  </article>
+</template>
+
+<script>
+// Painel local do NakamasBR (npm run painel): as chaves do app ficam no computador, a página só conversa com ele
+const API = "http://127.0.0.1:47801";
+const ROTULOS = {
+  PUBLIC_TO_EVERYONE: "Todos",
+  MUTUAL_FOLLOW_FRIENDS: "Amigos (seguidores mútuos)",
+  FOLLOWER_OF_CREATOR: "Seguidores",
+  SELF_ONLY: "Só eu",
+};
+const MUSICA = '<a href="https://www.tiktok.com/legal/page/global/music-usage-confirmation/en" target="_blank" rel="noopener">Confirmação de Uso de Música</a>';
+const MARCA = '<a href="https://www.tiktok.com/legal/page/global/bc-policy/en" target="_blank" rel="noopener">Política de Conteúdo de Marca</a>';
+const conteudo = document.getElementById("conteudo");
+
+function montar({ criador, itens }) {
+  conteudo.innerHTML = "";
+  const conta = document.createElement("div");
+  conta.className = "conta";
+  const foto = document.createElement("img");
+  foto.src = criador.creator_avatar_url; foto.alt = "";
+  const nome = document.createElement("div");
+  nome.innerHTML = `<strong></strong><small>Publicando como @<span></span></small>`;
+  nome.querySelector("strong").textContent = criador.creator_nickname;
+  nome.querySelector("span").textContent = criador.creator_username;
+  conta.append(foto, nome);
+  conteudo.append(conta);
+  if (!itens.length) {
+    const p = document.createElement("p");
+    p.className = "sub"; p.textContent = "Nenhum vídeo esperando aprovação.";
+    return conteudo.append(p);
+  }
+  for (const item of itens) conteudo.append(cartao(item, criador));
+}
+
+function cartao(item, criador) {
+  const el = document.getElementById("modelo").content.firstElementChild.cloneNode(true);
+  const $ = (s) => el.querySelector(s);
+  $(".nome").textContent = item.titulo;
+  const video = $("video");
+  // Prévia do vídeo exatamente como vai ser publicado (o arquivo fica no computador)
+  video.src = `${API}/api/video/${encodeURIComponent(item.id)}`;
+  const legenda = $(".legenda");
+  legenda.value = item.legenda;
+  const contar = () => ($(".contador").textContent = `${legenda.value.length} / 2200`);
+  legenda.addEventListener("input", contar); contar();
+
+  // Privacidade: sem valor padrão, só as opções que a conta permite
+  const privacidade = $(".privacidade");
+  for (const op of criador.privacy_level_options) {
+    const o = document.createElement("option");
+    o.value = op; o.textContent = ROTULOS[op] ?? op;
+    privacidade.append(o);
+  }
+  // Interações: desmarcadas por padrão e bloqueadas se a conta desativou no app
+  for (const [classe, desativado] of [["comentarios", criador.comment_disabled], ["dueto", criador.duet_disabled], ["stitch", criador.stitch_disabled]]) {
+    if (desativado) { $("." + classe).disabled = true; $("." + classe).parentElement.classList.add("desativado"); }
+  }
+
+  let duracaoOk = true;
+  video.addEventListener("loadedmetadata", () => {
+    duracaoOk = video.duration <= criador.max_video_post_duration_sec;
+    $(".duracao").textContent = duracaoOk ? "" : `Vídeo mais longo que o permitido (${criador.max_video_post_duration_sec} s).`;
+    atualizar();
+  });
+
+  function comercial() {
+    if (!$(".divulgar").checked) return "nenhum";
+    const m = $(".marca").checked, p = $(".parceria").checked;
+    return m && p ? "ambos" : m ? "marca" : p ? "parceria" : null;
+  }
+
+  function atualizar() {
+    const c = comercial();
+    $(".opcoes").hidden = !$(".divulgar").checked;
+    const deMarca = c === "parceria" || c === "ambos";
+    // Conteúdo de marca não pode ser privado
+    const soEu = privacidade.querySelector('option[value="SELF_ONLY"]');
+    if (soEu) {
+      soEu.disabled = deMarca;
+      soEu.textContent = deMarca ? "Só eu (indisponível para conteúdo de marca)" : ROTULOS.SELF_ONLY;
+      if (deMarca && privacidade.value === "SELF_ONLY") privacidade.value = "";
+    }
+    $(".rotulo").textContent = c === "marca" ? 'Seu vídeo será rotulado como "Conteúdo promocional".'
+      : deMarca ? 'Seu vídeo será rotulado como "Parceria paga".'
+      : $(".divulgar").checked ? "Você precisa indicar se o conteúdo promove você, terceiros ou ambos." : "";
+    $(".consentimento").innerHTML = `Ao publicar, você concorda com a ${deMarca ? MARCA + " e a " : ""}${MUSICA} do TikTok.`;
+    const pronto = privacidade.value && c !== null && duracaoOk && legenda.value.trim();
+    $(".agendar").disabled = $(".agora").disabled = !pronto;
+    $(".agendar").title = $(".agora").title = pronto ? "" : "Escolha a privacidade e complete a divulgação comercial";
+  }
+  for (const s of [".divulgar", ".marca", ".parceria"]) $(s).addEventListener("change", atualizar);
+  privacidade.addEventListener("change", atualizar);
+  legenda.addEventListener("input", atualizar);
+  atualizar();
+
+  async function enviar(agora) {
+    const resultado = $(".resultado");
+    $(".agendar").disabled = $(".agora").disabled = true;
+    resultado.className = "resultado";
+    resultado.textContent = agora ? "Publicando… pode levar até 2 minutos." : "Salvando…";
+    try {
+      const res = await fetch(`${API}/api/aprovar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: item.id, legenda: legenda.value, privacidade: privacidade.value,
+          comentarios: $(".comentarios").checked, dueto: $(".dueto").checked, stitch: $(".stitch").checked,
+          comercial: comercial(), agora,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.erro ?? res.status);
+      resultado.className = "resultado ok";
+      resultado.textContent = agora
+        ? "✔ Enviado ao TikTok! Pode levar alguns minutos para o vídeo aparecer no seu perfil."
+        : "✔ Aprovado. Será publicado no próximo horário agendado.";
+    } catch (e) {
+      resultado.className = "resultado erro";
+      resultado.textContent = `Não deu certo: ${e.message}`;
+      atualizar();
+    }
+  }
+  $(".agendar").addEventListener("click", () => enviar(false));
+  $(".agora").addEventListener("click", () => enviar(true));
+  return el;
+}
+
+// Login Kit: o endereço de autorização vem do painel (a chave do app fica no computador)
+fetch(`${API}/api/login-url`).then((r) => r.json()).then(({ url }) => {
+  const a = document.getElementById("conectar"); a.href = url; a.hidden = false;
+}).catch(() => {});
+
+fetch(`${API}/api/estado`)
+  .then(async (r) => { const j = await r.json(); if (!r.ok) throw new Error(j.erro); return j; })
+  .then(montar)
+  .catch((e) => {
+    conteudo.innerHTML = `<div class="fora"><strong>O painel não está rodando neste computador.</strong>
+      <p class="aviso">Abra o terminal na pasta do NakamasBR e rode <code>npm run painel</code>, depois recarregue esta página.</p>
+      <p class="aviso"></p></div>`;
+    conteudo.querySelectorAll(".aviso")[1].textContent = `Detalhe: ${e.message}`;
+  });
+</script>
+</body>
+</html>

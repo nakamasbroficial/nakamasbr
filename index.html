@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NakamasBR</title>
+<meta name="description" content="NakamasBR: vídeos curtos publicados no TikTok @nakamasbr.oficial">
+<style>
+  :root { --fundo: #f5f7fb; --texto: #141a26; --suave: #5d6678; --card: #fff; --borda: #dfe4ee; --destaque: #e63946; }
+  @media (prefers-color-scheme: dark) { :root { --fundo: #0f1420; --texto: #eef1f7; --suave: #a3acbd; --card: #182032; --borda: #2a3450; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fundo); color: var(--texto); font-family: system-ui, sans-serif; line-height: 1.6; }
+  main { max-width: 720px; margin: 0 auto; padding: 40px 16px 48px; }
+  h1 { font-size: 2rem; margin: 0; } h1 span { color: var(--destaque); }
+  h2 { font-size: 1.1rem; margin-top: 28px; }
+  .sub { color: var(--suave); margin: 4px 0 24px; }
+  .card { padding: 16px; border: 1px solid var(--borda); border-radius: 14px; background: var(--card); }
+  a { color: var(--destaque); }
+  footer { color: var(--suave); font-size: .85rem; margin-top: 32px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Nakamas<span>BR</span></h1>
+  <p class="sub">Vídeos curtos no TikTok <a href="https://www.tiktok.com/@nakamasbr.oficial">@nakamasbr.oficial</a></p>
+
+  <div class="card">
+    <p>O <strong>NakamasBR</strong> é o aplicativo próprio usado para publicar os vídeos da conta
+    <strong>@nakamasbr.oficial</strong> no TikTok. Ele roda no computador do responsável pela conta e publica
+    apenas nessa conta, sempre depois que o dono aprova cada vídeo.</p>
+  </div>
+
+  <h2>Como funciona</h2>
+  <ol>
+    <li>O dono da conta conecta o perfil do TikTok com o login oficial do TikTok (Login Kit).</li>
+    <li>Os vídeos preparados aparecem na <a href="aprovar.html">página de aprovação</a>, com a prévia do vídeo,
+      a legenda e o nome da conta que vai publicar.</li>
+    <li>Para cada vídeo, o dono escolhe quem pode ver, se permite comentários, duetos e stitch, e indica se é
+      conteúdo comercial.</li>
+    <li>Só depois da aprovação o vídeo é publicado no TikTok pela Content Posting API.</li>
+  </ol>
+
+  <h2>Contato</h2>
+  <p><a href="mailto:nakamasbr.oficial@gmail.com">nakamasbr.oficial@gmail.com</a></p>
+
+  <footer>
+    <a href="privacidade.html">Política de privacidade</a> ·
+    <a href="termos.html">Termos de uso</a> ·
+    <a href="exclusao-dados.html">Exclusão de dados</a>
+  </footer>
+</main>
+</body>
+</html>
