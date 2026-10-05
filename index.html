@@ -4,51 +4,187 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NakamasBR</title>
-<meta name="description" content="NakamasBR: vídeos curtos publicados no TikTok @nakamasbr.oficial">
+<meta name="description" content="NakamasBR: vídeos curtos publicados no TikTok @nakamasbr.oficial e a ferramenta usada para aprovar e publicar cada vídeo.">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta property="og:title" content="NakamasBR">
+<meta property="og:image" content="https://nakamasbroficial.github.io/nakamasbr/img/logo-1024.jpg">
 <style>
   :root { --fundo: #f5f7fb; --texto: #141a26; --suave: #5d6678; --card: #fff; --borda: #dfe4ee; --destaque: #e63946; }
   @media (prefers-color-scheme: dark) { :root { --fundo: #0f1420; --texto: #eef1f7; --suave: #a3acbd; --card: #182032; --borda: #2a3450; } }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--fundo); color: var(--texto); font-family: system-ui, sans-serif; line-height: 1.6; }
-  main { max-width: 720px; margin: 0 auto; padding: 40px 16px 48px; }
-  h1 { font-size: 2rem; margin: 0; } h1 span { color: var(--destaque); }
-  h2 { font-size: 1.1rem; margin-top: 28px; }
-  .sub { color: var(--suave); margin: 4px 0 24px; }
-  .card { padding: 16px; border: 1px solid var(--borda); border-radius: 14px; background: var(--card); }
   a { color: var(--destaque); }
-  footer { color: var(--suave); font-size: .85rem; margin-top: 32px; }
+  header { position: sticky; top: 0; z-index: 2; background: var(--card); border-bottom: 1px solid var(--borda); }
+  .barra { max-width: 960px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .marca { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--texto); font-weight: 700; font-size: 1.15rem; }
+  .marca img { width: 40px; height: 40px; border-radius: 50%; }
+  .marca span { color: var(--destaque); }
+  nav { margin-left: auto; display: flex; gap: 14px; flex-wrap: wrap; font-size: .95rem; }
+  nav a { color: var(--texto); text-decoration: none; }
+  nav a:hover { color: var(--destaque); }
+  .idioma { font: inherit; font-size: .85rem; border: 1px solid var(--borda); background: transparent; color: var(--texto); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+  main { max-width: 960px; margin: 0 auto; padding: 0 16px 48px; }
+  .hero { display: grid; grid-template-columns: 1fr 280px; gap: 32px; align-items: center; padding: 48px 0 32px; }
+  .hero img { width: 100%; border-radius: 50%; box-shadow: 0 10px 40px rgba(0,0,0,.18); }
+  .hero h1 { font-size: 2.4rem; line-height: 1.15; margin: 0 0 12px; } .hero h1 span { color: var(--destaque); }
+  .hero p { color: var(--suave); font-size: 1.1rem; margin: 0 0 20px; }
+  .botao { display: inline-block; background: var(--destaque); color: #fff; text-decoration: none; font-weight: 600; border-radius: 999px; padding: 10px 20px; margin: 0 8px 8px 0; }
+  .botao.sec { background: transparent; color: var(--texto); border: 1px solid var(--borda); }
+  @media (max-width: 720px) { .hero { grid-template-columns: 1fr; text-align: center; } .hero img { max-width: 200px; margin: 0 auto; order: -1; } }
+  section { padding: 28px 0; border-top: 1px solid var(--borda); }
+  h2 { font-size: 1.5rem; margin: 0 0 16px; }
+  .grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .card { padding: 18px; border: 1px solid var(--borda); border-radius: 14px; background: var(--card); }
+  .card h3 { margin: 0 0 6px; font-size: 1.05rem; }
+  .card p { margin: 0; color: var(--suave); font-size: .95rem; }
+  .icone { font-size: 1.6rem; }
+  ol.passos { padding-left: 20px; } ol.passos li { margin-bottom: 10px; }
+  details { border: 1px solid var(--borda); border-radius: 12px; background: var(--card); padding: 12px 16px; margin-bottom: 10px; }
+  summary { font-weight: 600; cursor: pointer; }
+  details p { color: var(--suave); margin: 8px 0 0; }
+  footer { border-top: 1px solid var(--borda); background: var(--card); }
+  footer .barra { font-size: .9rem; color: var(--suave); }
+  footer .links { margin-left: auto; display: flex; gap: 14px; flex-wrap: wrap; }
+  [data-en] { display: none; }
+  html[lang="en"] [data-pt] { display: none; } html[lang="en"] [data-en] { display: revert; }
 </style>
 </head>
 <body>
-<main>
-  <h1>Nakamas<span>BR</span></h1>
-  <p class="sub">Vídeos curtos no TikTok <a href="https://www.tiktok.com/@nakamasbr.oficial">@nakamasbr.oficial</a></p>
+<header>
+  <div class="barra">
+    <a class="marca" href="./"><img src="img/icon-192.png" alt="NakamasBR" width="40" height="40"> Nakamas<span>BR</span></a>
+    <nav>
+      <a href="#sobre"><span data-pt>Sobre</span><span data-en>About</span></a>
+      <a href="#recursos"><span data-pt>Recursos</span><span data-en>Features</span></a>
+      <a href="#como-funciona"><span data-pt>Como funciona</span><span data-en>How it works</span></a>
+      <a href="#perguntas">FAQ</a>
+      <a href="#contato"><span data-pt>Contato</span><span data-en>Contact</span></a>
+    </nav>
+    <button class="idioma" type="button" id="idioma">EN</button>
+  </div>
+</header>
 
-  <div class="card">
-    <p>O <strong>NakamasBR</strong> é o aplicativo próprio usado para publicar os vídeos da conta
-    <strong>@nakamasbr.oficial</strong> no TikTok. Ele roda no computador do responsável pela conta e publica
-    apenas nessa conta, sempre depois que o dono aprova cada vídeo.</p>
+<main>
+  <div class="hero">
+    <div>
+      <h1>Nakamas<span>BR</span></h1>
+      <p data-pt>Vídeos curtos de anime e cultura geek no TikTok <a href="https://www.tiktok.com/@nakamasbr.oficial">@nakamasbr.oficial</a>, publicados com uma ferramenta própria em que cada vídeo é revisado e aprovado antes de ir ao ar.</p>
+      <p data-en>Short anime and geek-culture videos on TikTok <a href="https://www.tiktok.com/@nakamasbr.oficial">@nakamasbr.oficial</a>, published with our own tool where every video is reviewed and approved before it goes live.</p>
+      <a class="botao" href="https://www.tiktok.com/@nakamasbr.oficial"><span data-pt>Ver no TikTok</span><span data-en>Watch on TikTok</span></a>
+      <a class="botao sec" href="#como-funciona"><span data-pt>Como funciona</span><span data-en>How it works</span></a>
+    </div>
+    <img src="img/logo-1024.jpg" alt="Logo NakamasBR" width="280" height="280">
   </div>
 
-  <h2>Como funciona</h2>
-  <ol>
-    <li>O dono da conta conecta o perfil do TikTok com o login oficial do TikTok (Login Kit).</li>
-    <li>Os vídeos preparados aparecem na <a href="aprovar.html">página de aprovação</a>, com a prévia do vídeo,
-      a legenda e o nome da conta que vai publicar.</li>
-    <li>Para cada vídeo, o dono escolhe quem pode ver, se permite comentários, duetos e stitch, e indica se é
-      conteúdo comercial.</li>
-    <li>Só depois da aprovação o vídeo é publicado no TikTok pela Content Posting API. Se preferir, o dono manda o
-      vídeo para os rascunhos do app do TikTok e termina a publicação por lá.</li>
-  </ol>
+  <section id="sobre">
+    <h2 data-pt>Sobre o NakamasBR</h2><h2 data-en>About NakamasBR</h2>
+    <p data-pt>O NakamasBR é um perfil brasileiro de vídeos curtos para a comunidade de fãs de anime. Para manter a
+      qualidade e o controle do que vai ao ar, o projeto usa um aplicativo web próprio, também chamado NakamasBR,
+      que publica os vídeos apenas na conta oficial <strong>@nakamasbr.oficial</strong> e sempre depois da aprovação
+      do dono da conta.</p>
+    <p data-en>NakamasBR is a Brazilian short-video profile for the anime fan community. To keep quality and full
+      control over what is published, the project uses its own web application, also called NakamasBR, which posts
+      videos only to the official account <strong>@nakamasbr.oficial</strong> and always after the account owner
+      approves them.</p>
+  </section>
 
-  <h2>Contato</h2>
-  <p><a href="mailto:nakamasbr.oficial@gmail.com">nakamasbr.oficial@gmail.com</a></p>
+  <section id="recursos">
+    <h2 data-pt>Recursos</h2><h2 data-en>Features</h2>
+    <div class="grade">
+      <div class="card"><div class="icone">🔐</div>
+        <h3 data-pt>Login oficial do TikTok</h3><h3 data-en>Official TikTok login</h3>
+        <p data-pt>A conta é conectada pelo Login Kit do TikTok. Nenhuma senha passa pelo NakamasBR.</p>
+        <p data-en>The account is connected through TikTok Login Kit. No password ever goes through NakamasBR.</p></div>
+      <div class="card"><div class="icone">👀</div>
+        <h3 data-pt>Prévia antes de publicar</h3><h3 data-en>Preview before posting</h3>
+        <p data-pt>Cada vídeo aparece com prévia, legenda editável e a conta (foto e @) que vai publicar.</p>
+        <p data-en>Each video is shown with a preview, an editable caption and the account (avatar and @) that will post it.</p></div>
+      <div class="card"><div class="icone">⚙️</div>
+        <h3 data-pt>Controle de privacidade</h3><h3 data-en>Privacy controls</h3>
+        <p data-pt>O dono escolhe quem pode ver e se permite comentários, dueto e stitch em cada vídeo.</p>
+        <p data-en>The owner picks who can view and whether comments, duet and stitch are allowed for each video.</p></div>
+      <div class="card"><div class="icone">🏷️</div>
+        <h3 data-pt>Conteúdo comercial</h3><h3 data-en>Commercial content</h3>
+        <p data-pt>Opção para divulgar conteúdo de marca, seguindo as políticas do TikTok.</p>
+        <p data-en>Option to disclose branded content, following TikTok policies.</p></div>
+      <div class="card"><div class="icone">🚀</div>
+        <h3 data-pt>Publicação direta</h3><h3 data-en>Direct posting</h3>
+        <p data-pt>Depois de aprovado, o vídeo é publicado pela Content Posting API e o status aparece na tela.</p>
+        <p data-en>Once approved, the video is posted via the Content Posting API and the status is shown on screen.</p></div>
+      <div class="card"><div class="icone">📝</div>
+        <h3 data-pt>Enviar para rascunho</h3><h3 data-en>Send to drafts</h3>
+        <p data-pt>Se preferir, o vídeo vai para os rascunhos do app do TikTok para ser finalizado lá.</p>
+        <p data-en>Alternatively, the video goes to the TikTok app drafts to be finished there.</p></div>
+    </div>
+  </section>
 
-  <footer>
-    <a href="privacidade.html">Política de privacidade</a> ·
-    <a href="termos.html">Termos de uso</a> ·
-    <a href="exclusao-dados.html">Exclusão de dados</a>
-  </footer>
+  <section id="como-funciona">
+    <h2 data-pt>Como funciona</h2><h2 data-en>How it works</h2>
+    <ol class="passos" data-pt>
+      <li>O dono da conta conecta o perfil do TikTok com o login oficial do TikTok (Login Kit).</li>
+      <li>Os vídeos preparados aparecem na <a href="aprovar.html">página de aprovação</a>, com a prévia do vídeo,
+        a legenda e o nome da conta que vai publicar.</li>
+      <li>Para cada vídeo, o dono escolhe quem pode ver, se permite comentários, duetos e stitch, e indica se é
+        conteúdo comercial.</li>
+      <li>Só depois da aprovação o vídeo é publicado no TikTok pela Content Posting API. Se preferir, o dono manda o
+        vídeo para os rascunhos do app do TikTok e termina a publicação por lá.</li>
+    </ol>
+    <ol class="passos" data-en>
+      <li>The account owner connects the TikTok profile using the official TikTok login (Login Kit).</li>
+      <li>Prepared videos appear on the <a href="aprovar.html">approval page</a> with a video preview, the caption
+        and the account that will post it.</li>
+      <li>For each video, the owner chooses who can view it, whether comments, duets and stitches are allowed, and
+        whether it is commercial content.</li>
+      <li>Only after approval is the video posted to TikTok via the Content Posting API. Alternatively, the owner sends
+        the video to the TikTok app drafts and finishes posting there.</li>
+    </ol>
+  </section>
+
+  <section id="perguntas">
+    <h2 data-pt>Perguntas frequentes</h2><h2 data-en>Frequently asked questions</h2>
+    <details><summary><span data-pt>Quem pode usar o aplicativo?</span><span data-en>Who can use the app?</span></summary>
+      <p data-pt>Apenas o dono da conta @nakamasbr.oficial. O aplicativo não publica em contas de outras pessoas.</p>
+      <p data-en>Only the owner of the @nakamasbr.oficial account. The app does not post to anyone else's account.</p></details>
+    <details><summary><span data-pt>Algum vídeo é publicado sem aprovação?</span><span data-en>Is any video posted without approval?</span></summary>
+      <p data-pt>Não. Cada vídeo só é enviado ao TikTok depois que o dono revisa e confirma.</p>
+      <p data-en>No. Each video is sent to TikTok only after the owner reviews and confirms it.</p></details>
+    <details><summary><span data-pt>Quais dados do TikTok são usados?</span><span data-en>What TikTok data is used?</span></summary>
+      <p data-pt>Somente o básico do perfil (foto, nome e @) para mostrar qual conta vai publicar. Detalhes na
+        <a href="privacidade.html">Política de Privacidade</a>.</p>
+      <p data-en>Only basic profile info (avatar, name and @) to show which account will post. Details in the
+        <a href="privacidade.html">Privacy Policy</a>.</p></details>
+    <details><summary><span data-pt>Como peço a exclusão dos meus dados?</span><span data-en>How do I request data deletion?</span></summary>
+      <p data-pt>Veja a página de <a href="exclusao-dados.html">Exclusão de dados</a> ou escreva para o nosso e-mail.</p>
+      <p data-en>See the <a href="exclusao-dados.html">Data deletion</a> page or email us.</p></details>
+  </section>
+
+  <section id="contato">
+    <h2 data-pt>Contato</h2><h2 data-en>Contact</h2>
+    <p><span data-pt>E-mail:</span><span data-en>Email:</span> <a href="mailto:nakamasbr.oficial@gmail.com">nakamasbr.oficial@gmail.com</a><br>
+      TikTok: <a href="https://www.tiktok.com/@nakamasbr.oficial">@nakamasbr.oficial</a></p>
+  </section>
 </main>
+
+<footer>
+  <div class="barra">
+    <span>© 2026 NakamasBR</span>
+    <span class="links">
+      <a href="privacidade.html"><span data-pt>Política de privacidade</span><span data-en>Privacy Policy</span></a>
+      <a href="termos.html"><span data-pt>Termos de uso</span><span data-en>Terms of Service</span></a>
+      <a href="exclusao-dados.html"><span data-pt>Exclusão de dados</span><span data-en>Data deletion</span></a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  // Idioma: segue o navegador (revisores em inglês veem a versão em inglês) e pode ser trocado no botão
+  const raiz = document.documentElement, botao = document.getElementById("idioma");
+  function aplicar(l) { raiz.lang = l === "en" ? "en" : "pt-BR"; botao.textContent = l === "en" ? "PT" : "EN"; }
+  let salvo = null; try { salvo = localStorage.getItem("idioma"); } catch (e) {}
+  aplicar(salvo || ((navigator.language || "").toLowerCase().startsWith("pt") ? "pt" : "en"));
+  botao.onclick = () => { const l = raiz.lang === "en" ? "pt" : "en"; aplicar(l); try { localStorage.setItem("idioma", l); } catch (e) {} };
+</script>
 </body>
 </html>
